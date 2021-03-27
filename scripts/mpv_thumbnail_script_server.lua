@@ -1,3 +1,4 @@
+--[ FileConcat-S src/license_blurb.lua HASH:1198092acdd22752d33872a3d0fdd75ae520cfa3b8a1acc1d66fac6d8906229b ]--
 --[[
     Copyright (C) 2017 AMM
 
@@ -14,11 +15,8 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ]]--
---[[
-    mpv_thumbnail_script.lua 0.4.2 - commit a2de250 (branch master)
-    https://github.com/TheAMM/mpv_thumbnail_script
-    Built on 2018-02-07 20:36:54
-]]--
+--[ FileConcat-E src/license_blurb.lua HASH:1198092acdd22752d33872a3d0fdd75ae520cfa3b8a1acc1d66fac6d8906229b ]--
+--[ FileConcat-S lib/helpers.lua HASH:efe55221aa2d98eba817ad0430efe784fbdf652a812709ff93d59d27dfce2652 ]--
 local assdraw = require 'mp.assdraw'
 local msg = require 'mp.msg'
 local opt = require 'mp.options'
@@ -340,6 +338,8 @@ function round_rect(ass, x0, y0, x1, y1, rtl, rtr, rbr, rbl)
         ass:bezier_curve(x0, y0 + rtl - rtl*c, x0 + rtl - rtl*c, y0, x0 + rtl, y0) -- top left corner
     end
 end
+--[ FileConcat-E lib/helpers.lua HASH:efe55221aa2d98eba817ad0430efe784fbdf652a812709ff93d59d27dfce2652 ]--
+--[ FileConcat-S src/options.lua HASH:43289ede028e21aaafa333306430507752fcc218de48b5aac9b89a2b2ba64da2 ]--
 local SCRIPT_NAME = "mpv_thumbnail_script"
 
 local default_cache_base = ON_WINDOWS and os.getenv("TEMP") or "/tmp/"
@@ -461,6 +461,8 @@ local thumbnailer_options = {
 }
 
 read_options(thumbnailer_options, SCRIPT_NAME)
+--[ FileConcat-E src/options.lua HASH:43289ede028e21aaafa333306430507752fcc218de48b5aac9b89a2b2ba64da2 ]--
+--[ FileConcat-S src/thumbnailer_server.lua HASH:dbfdc67da7cb5a38cc64573cf6eac4f3151779b1421284d90c3a74614db2c964 ]--
 function skip_nil(tbl)
     local n = {}
     for k, v in pairs(tbl) do
@@ -522,7 +524,7 @@ function create_thumbnail_mpv(file_path, timestamp, size, output_path, options)
         "--vf-add=format=bgra",
         "--of=rawvideo",
         "--ovc=rawvideo",
-        "--o", output_path
+        "--o=" .. output_path
     })
     return utils.subprocess({args=mpv_command})
 end
@@ -609,6 +611,7 @@ function do_worker_job(state_json_string, frames_json_string)
     end
 
     local file_duration = mp.get_property_native("duration")
+    if file_duration == nil then file_duration = 0 end
     local file_path = thumb_state.worker_input_path
 
     if thumb_state.is_remote then
@@ -734,3 +737,4 @@ mp.register_script_message("mpv_thumbnail_script-slaved", function()
     msg.debug("Successfully registered with master")
     register_timer:stop()
 end)
+--[ FileConcat-E src/thumbnailer_server.lua HASH:dbfdc67da7cb5a38cc64573cf6eac4f3151779b1421284d90c3a74614db2c964 ]--

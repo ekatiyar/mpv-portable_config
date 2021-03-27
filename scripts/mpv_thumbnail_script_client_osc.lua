@@ -1,3 +1,4 @@
+--[ FileConcat-S src/license_blurb.lua HASH:1198092acdd22752d33872a3d0fdd75ae520cfa3b8a1acc1d66fac6d8906229b ]--
 --[[
     Copyright (C) 2017 AMM
 
@@ -14,11 +15,8 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ]]--
---[[
-    mpv_thumbnail_script.lua 0.4.2 - commit a2de250 (branch master)
-    https://github.com/TheAMM/mpv_thumbnail_script
-    Built on 2018-02-07 20:36:55
-]]--
+--[ FileConcat-E src/license_blurb.lua HASH:1198092acdd22752d33872a3d0fdd75ae520cfa3b8a1acc1d66fac6d8906229b ]--
+--[ FileConcat-S lib/helpers.lua HASH:efe55221aa2d98eba817ad0430efe784fbdf652a812709ff93d59d27dfce2652 ]--
 local assdraw = require 'mp.assdraw'
 local msg = require 'mp.msg'
 local opt = require 'mp.options'
@@ -340,6 +338,8 @@ function round_rect(ass, x0, y0, x1, y1, rtl, rtr, rbr, rbl)
         ass:bezier_curve(x0, y0 + rtl - rtl*c, x0 + rtl - rtl*c, y0, x0 + rtl, y0) -- top left corner
     end
 end
+--[ FileConcat-E lib/helpers.lua HASH:efe55221aa2d98eba817ad0430efe784fbdf652a812709ff93d59d27dfce2652 ]--
+--[ FileConcat-S lib/sha1.lua HASH:10ce7dd88adfbea3a3fe16b1eb1bf377ef316a4602bdcedede3eaa38ed3801b3 ]--
 -- $Revision: 1.5 $
 -- $Date: 2014-09-10 16:54:25 $
 
@@ -672,6 +672,8 @@ end
 return sha1
 end)()
 
+--[ FileConcat-E lib/sha1.lua HASH:10ce7dd88adfbea3a3fe16b1eb1bf377ef316a4602bdcedede3eaa38ed3801b3 ]--
+--[ FileConcat-S src/options.lua HASH:43289ede028e21aaafa333306430507752fcc218de48b5aac9b89a2b2ba64da2 ]--
 local SCRIPT_NAME = "mpv_thumbnail_script"
 
 local default_cache_base = ON_WINDOWS and os.getenv("TEMP") or "/tmp/"
@@ -793,6 +795,8 @@ local thumbnailer_options = {
 }
 
 read_options(thumbnailer_options, SCRIPT_NAME)
+--[ FileConcat-E src/options.lua HASH:43289ede028e21aaafa333306430507752fcc218de48b5aac9b89a2b2ba64da2 ]--
+--[ FileConcat-S src/thumbnailer_shared.lua HASH:88982a9d63082a9e2a048cd4945823632383717019baa08175f9c53d65d580d2 ]--
 local Thumbnailer = {
     cache_directory = thumbnailer_options.cache_directory,
 
@@ -960,6 +964,7 @@ end
 function Thumbnailer:get_delta()
     local file_path = mp.get_property_native("path")
     local file_duration = mp.get_property_native("duration")
+    if file_duration == nil then file_duration = 0 end
     local is_seekable = mp.get_property_native("seekable")
 
     -- Naive url check
@@ -997,6 +1002,7 @@ function Thumbnailer:get_thumbnail_count(delta)
         return 0
     end
     local file_duration = mp.get_property_native("duration")
+    if file_duration == nil then file_duration = 0 end
 
     return math.ceil(file_duration / delta)
 end
@@ -1073,9 +1079,11 @@ function Thumbnailer:register_client()
     -- This will be executed after the on_video_change (because it's registered after it)
     mp.observe_property("video-dec-params", "native", function()
         local duration = mp.get_property_native("duration")
+        if duration == nil then duration = 0 end
         local max_duration = thumbnailer_options.autogenerate_max_duration
+        if max_duration == nil then max_duration = 0 end
 
-        if self.state.available and thumbnailer_options.autogenerate then
+        if duration ~= nil and self.state.available and thumbnailer_options.autogenerate then
             -- Notify if autogenerate is on and video is not too long
             if duration < max_duration or max_duration == 0 then
                 self:start_worker_jobs()
@@ -1225,6 +1233,8 @@ end
 
 mp.register_event("start-file", function() Thumbnailer:on_start_file() end)
 mp.observe_property("video-dec-params", "native", function(name, params) Thumbnailer:on_video_change(params) end)
+--[ FileConcat-E src/thumbnailer_shared.lua HASH:88982a9d63082a9e2a048cd4945823632383717019baa08175f9c53d65d580d2 ]--
+--[ FileConcat-S src/patched_osc.lua HASH:caa5d633466e6e2f9c94705e751f880c3b84c6707bb869f1ae5859bf6b71dc6e ]--
 --[[
 This is mpv's original player/lua/osc.lua patched to display thumbnails
 
@@ -3884,3 +3894,4 @@ mp.register_script_message("osc-visibility", visibility_mode)
 mp.add_key_binding(nil, "visibility", function() visibility_mode("cycle") end)
 
 set_virt_mouse_area(0, 0, 0, 0, "input")
+--[ FileConcat-E src/patched_osc.lua HASH:caa5d633466e6e2f9c94705e751f880c3b84c6707bb869f1ae5859bf6b71dc6e ]--
